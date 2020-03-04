@@ -28,6 +28,7 @@ namespace TestExcelParser
                 workbook = new HSSFWorkbook(fs);
             }
 
+            var formatter = new DataFormatter();
 
             var sheetsNumber = workbook.NumberOfSheets;
             for (var s = 0; s < sheetsNumber; s++)
@@ -39,7 +40,7 @@ namespace TestExcelParser
 
                     var rowCount = sheet.LastRowNum; // This may not be valid row count.
                     // If first row is table head, i starts from 1
-                    for (var rowNum = 1; rowNum <= rowCount; rowNum++)
+                    for (var rowNum = 0; rowNum < rowCount; rowNum++)
                     {
                         _treeCellsList = new List<TreeNode>();
 
@@ -73,6 +74,9 @@ namespace TestExcelParser
                                 cellNodesList.Add(
                                     new TreeNode(nameof(cellFont.FontHeight) + " = " + cellFont.FontHeight));
 
+                                var formatCellValue = formatter.FormatCellValue(cell);
+                                cellNodesList.Add(new TreeNode(
+                                    nameof(formatCellValue) + " = " + formatCellValue));
                                 if (cell.CellType == CellType.String)
                                 {
                                     cellNodesList.Add(new TreeNode(
@@ -80,11 +84,21 @@ namespace TestExcelParser
                                     cellNodesList.Add(
                                         new TreeNode(nameof(cell.StringCellValue) + " = " + cell.StringCellValue));
                                 }
-
-                                if (cell.CellType == CellType.Formula)
+                                else if (cell.CellType == CellType.Numeric)
+                                {
+                                    var myCell = cell;
+                                    cellNodesList.Add(new TreeNode(
+                                        nameof(cell.NumericCellValue) + " = " + cell.NumericCellValue));
+                                }
+                                else if (cell.CellType == CellType.Formula)
                                 {
                                     cellNodesList.Add(
                                         new TreeNode(nameof(cell.CellFormula) + " = " + cell.CellFormula));
+                                }
+                                else if (cell.CellType == CellType.Boolean)
+                                {
+                                    cellNodesList.Add(
+                                        new TreeNode(nameof(cell.BooleanCellValue) + " = " + cell.BooleanCellValue));
                                 }
 
                                 cellNodesList.Add(new TreeNode(nameof(cell.CellComment) + " = " + cell.CellComment));
