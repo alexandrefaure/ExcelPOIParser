@@ -39,7 +39,9 @@ namespace TestExcelParser
             var cellsList = new List<Cell>();
 
             var sheetsNumber = workbook.NumberOfSheets;
-            sheetsNumber = 1;
+            sheetsNumber = 2;
+
+            var linesList = new List<Line>();
             for (var sheetIndex = 0; sheetIndex < sheetsNumber; sheetIndex++)
             {
                 var sheet = workbook.GetSheetAt(sheetIndex);
@@ -48,9 +50,13 @@ namespace TestExcelParser
                     _treeRowsList = new List<TreeNode>();
 
                     var rowCount = sheet.LastRowNum; // This may not be valid row count.
+                    
+
                     // If first row is table head, i starts from 1
                     for (var rowNum = 0; rowNum < rowCount; rowNum++)
                     {
+
+
                         _treeCellsList = new List<TreeNode>();
 
                         var curRow = sheet.GetRow(rowNum);
@@ -60,7 +66,7 @@ namespace TestExcelParser
                             break;
                         }
 
-                        
+                        var elementsList = new List<Element>();
                         foreach (var cell in curRow.Cells)
                         {
                             if (cell != null)
@@ -156,19 +162,43 @@ namespace TestExcelParser
                                 //var styleNode = new TreeNode("Cell : " + cell.ColumnIndex, cellNodesList.ToArray());
                                 //_treeCellsList.Add(styleNode);
 
-                                cellsList.Add(cellObject);
+                                
 
+
+                                var element = new Element
+                                {
+                                    cell = cellObject
+                                };
+
+                 
+                                elementsList.Add(element);
+
+                                cellsList.Add(cellObject);
                             }
                         }
 
-                        var fileName = "C:\\Users\\FAURE\\Desktop\\export.txt";
+                        var line = new Line
+                        {
+                            ElementGroupsList = new List<ElementGroup>
+                            {
+                                new ElementGroup
+                                {
+                                    elementsList = elementsList
+                                }
+                            }
+                        };
+                        
+                        linesList.Add(line);
+                        
 
-                        var json = JsonConvert.SerializeObject(cellsList, Formatting.Indented);
-                        File.WriteAllText(fileName, json);
 
-                        var treeNodeRow = new TreeNode("Row " + rowNum, _treeCellsList.ToArray());
-                        _treeRowsList.Add(treeNodeRow);
+                 
                     }
+                    SerializeObject(linesList);
+
+                    //var treeNodeRow = new TreeNode("Row " + rowNum, _treeCellsList.ToArray());
+                    //_treeRowsList.Add(treeNodeRow);
+
                 }
 
                 // Ajout des feuilles à la listView
@@ -177,6 +207,23 @@ namespace TestExcelParser
             }
 
             return treeView.Nodes;
+        }
+
+        private static void SerializeObject(List<Line> cellsList)
+        {
+            //var fileName = "C:\\Users\\FAURE\\Desktop\\export.txt";
+
+            //var json = JsonConvert.SerializeObject(cellsList, Formatting.Indented);
+            //File.WriteAllText(fileName, json);
+
+            System.Xml.Serialization.XmlSerializer writer =
+                new System.Xml.Serialization.XmlSerializer(typeof(List<Line>));
+
+            var path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "//SerializationOverview.xml";
+            System.IO.FileStream file = System.IO.File.Create(path);
+
+            writer.Serialize(file, cellsList);
+            file.Close();
         }
     }
 }

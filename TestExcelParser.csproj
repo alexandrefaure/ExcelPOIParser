@@ -74,6 +74,13 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="Model\Cell.cs" />
+    <Compile Include="Model\CellType.cs" />
+    <Compile Include="Model\Element.cs" />
+    <Compile Include="Model\ElementGroup.cs" />
+    <Compile Include="Model\ExcelStructure.cs" />
+    <Compile Include="Model\File.cs" />
+    <Compile Include="Model\Line.cs" />
+    <Compile Include="Model\Style.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">
