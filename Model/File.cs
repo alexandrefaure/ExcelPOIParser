@@ -1,6 +1,6 @@
 ﻿namespace TestExcelParser.Model
 {
-    internal class File
+    public class File
     {
         public string name;
     }

@@ -73,6 +73,7 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Model\WordElement.cs" />
     <Compile Include="Model\Cell.cs" />
     <Compile Include="Model\CellType.cs" />
     <Compile Include="Model\Element.cs" />

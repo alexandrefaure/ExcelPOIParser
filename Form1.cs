@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
 using NPOI.XWPF.UserModel;
+using TestExcelParser.Model;
 
 namespace TestExcelParser
 {
     public partial class Form1 : Form
     {
-        private static string excelFilePath = "D:\\tests\\4573-DCE-DPGF ind B.xlsx";
-        private static string wordFilePath = "C:\\Users\\FAURE\\Documents\\die_4816176\\mail N2.docx";
+        private static string excelFilePath = @"D:\tests\Extractions NPOI\4573-DCE-DPGF ind B.xlsx";
+        private static string wordFilePath = @"D:\tests\Extractions NPOI\B.4 Bordereau des prix.docx";
 
         public Form1()
         {
@@ -67,6 +68,31 @@ namespace TestExcelParser
                 using (var file = new FileStream(path, FileMode.Open, FileAccess.Read))
                 {
                     document = new XWPFDocument(file);
+                    var tables = document.GetXWPFDocument().Tables;
+
+                    foreach (var table in tables)
+                    {
+                        var content = table.Text;
+                        var rows = table.Rows;
+
+                        foreach (var row in rows)
+                        {
+                            var cells = row.GetTableCells();
+                            foreach (var cell in cells)
+                            {
+                                var wordElement = new WordElement
+                                {
+                                    style = new Style
+                                    {
+                                        
+                                    }
+                                };
+                                var text = cell.GetText();
+                                var color = cell.GetColor();
+
+                            }
+                        }
+                    }
                 }
             }
             catch (Exception ex)
